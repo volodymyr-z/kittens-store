@@ -6,7 +6,6 @@ WORKDIR /app
 RUN bundle install -j4
 
 FROM ruby:2.4.9-alpine
-RUN gem env
 
 RUN apk add --update --no-cache postgresql-client
 COPY --from=build /usr/local/bundle /usr/local/bundle
