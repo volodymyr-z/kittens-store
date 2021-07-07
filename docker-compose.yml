@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:13.3-alpine
+    environment:
+      - POSTGRES_DB=kittens_store_dev
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+  web:
+    build: .
+    command: rackup --port 1234 --host '0.0.0.0'
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
