@@ -2,17 +2,23 @@ version: '3.9'
 
 services:
   db:
+    restart: always
     image: postgres:13.3-alpine
     environment:
       - POSTGRES_DB=kittens_store_dev
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    ports:
-      - "5432:5432"
   web:
     build: .
-    command: rackup --port 1234 --host '0.0.0.0'
+    command: [ "sh", "run_app.sh" ]
     ports:
-      - "3000:3000"
+      - "1234:1234"
     depends_on:
       - db
+    volumes:
+      - ./:/app/
+    environment:
+      - RACK_ENV=development
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/kittens_store_dev
+      - POSTGRES_PASSWORD=postgres
+

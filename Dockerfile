@@ -11,6 +11,3 @@ RUN apk add --update --no-cache postgresql-client
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY . /app
 WORKDIR /app
-
-ENTRYPOINT ["bundle", "exec"]
-CMD ["rackup"]
