@@ -9,3 +9,11 @@ output "subnet_ids" {
 output "availability_zones" {
   value = aws_subnet.SUBNET[*].availability_zone
 }
+
+output "your_ip" {
+  value = chomp(data.http.myip.body)
+}
+
+output "public_ip" {
+  value = aws_instance.INSTANCE_NEW.public_ip
+}

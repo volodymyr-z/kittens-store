@@ -1,0 +1,22 @@
+version: '3.3'
+
+services:
+  db:
+    restart: always
+    image: postgres:13.3-alpine
+    environment:
+      - POSTGRES_DB=kittens_store_dev
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  web:
+    image: vghostpro/kittens-store
+    command: [ "sh", "/app/run_app.sh" ]
+    ports:
+      - "1234:1234"
+    depends_on:
+      - db
+    environment:
+      - RACK_ENV=development
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/kittens_store_dev
+      - POSTGRES_PASSWORD=postgres
+
