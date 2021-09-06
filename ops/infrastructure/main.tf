@@ -104,6 +104,10 @@ data "aws_ami" "AWS_AMI_RES" {
   }
 }
 
+data "template_file" "USER_DATA" {
+  template = file("../templates/app_user_data.sh.tpl")
+}
+
 resource "aws_instance" "INSTANCE_NEW" {
   ami           = data.aws_ami.AWS_AMI_RES.id
   instance_type = "t2.micro"
@@ -113,26 +117,24 @@ resource "aws_instance" "INSTANCE_NEW" {
   subnet_id = aws_subnet.SUBNET.0.id
   vpc_security_group_ids = [aws_security_group.SECURITY_GROUP_PORTS.id]
 
+  user_data = base64encode(data.template_file.USER_DATA.rendered)
+
   tags = {
     type = "new-instance-test"
   }
-
-//  provisioner "file" {
-//    source      = "../scripts/install_docker_ec2.sh"
-//    destination = "/home/ec2-user/install_docker_ec2.sh"
-//  }
 
   provisioner "file" {
     source      = "../../docker-compose-remote.yml"
     destination = "/tmp/docker-compose-remote.yml"
   }
 
-  provisioner "remote-exec" {
-    scripts = [
-      "../scripts/install_docker_ec2.sh",
-      "../scripts/run_app_ec2.sh"
-      ]
-  }
+
+//  provisioner "remote-exec" {
+//    scripts = [
+//      "../scripts/install_docker_ec2.sh",
+//      "../scripts/run_app_ec2.sh"
+//      ]
+//  }
 
   connection {
     type        = "ssh"
