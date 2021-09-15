@@ -11,5 +11,5 @@ chmod +x /usr/local/bin/docker-compose
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 docker-compose --version
 
-docker-compose -f /tmp/docker-compose-remote.yml up
+sudo docker-compose -f /tmp/docker-compose-remote.yml up -d
 
