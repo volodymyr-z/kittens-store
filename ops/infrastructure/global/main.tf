@@ -22,6 +22,13 @@ module "security" {
   vpc_id = module.vpc.vpc_id
 }
 
+module "rds" {
+  source = "../modules/aws-rds-instance"
+
+  name = "NewDatabase"
+  vpc = module.vpc
+}
+
 module "app_instance" {
   source = "../modules/aws-app-instance"
 
