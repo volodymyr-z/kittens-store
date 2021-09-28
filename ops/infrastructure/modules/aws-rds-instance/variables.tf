@@ -10,3 +10,10 @@ variable "vpc" {
   })
   description = "VPC information"
 }
+
+variable "assigned_security_groups" {
+  type = list(string)
+
+  description = "Assigned Security group for RDS"
+  default = []
+}

@@ -10,7 +10,7 @@ resource "aws_db_instance" "main" {
   db_subnet_group_name = aws_db_subnet_group.subnet_group.name
   publicly_accessible  = false
   skip_final_snapshot  = true
-  vpc_security_group_ids = [aws_security_group.rds_security_group.id]
+  vpc_security_group_ids = concat([aws_security_group.rds_security_group.id], var.assigned_security_groups)
 }
 
 resource "aws_db_subnet_group" "subnet_group" {

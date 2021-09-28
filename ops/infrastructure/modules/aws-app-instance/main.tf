@@ -5,7 +5,7 @@ resource "aws_instance" "INSTANCE_NEW" {
 
   key_name = aws_key_pair.AWS_KEY.key_name
   subnet_id = var.subnet_id
-  vpc_security_group_ids = [var.security_group_ids]
+  vpc_security_group_ids = concat([var.security_group_ids], var.assigned_security_groups)
 
   user_data = base64encode(data.template_file.USER_DATA.rendered)
 
@@ -20,7 +20,7 @@ resource "aws_instance" "INSTANCE_NEW" {
 
    provisioner "remote-exec" {
       scripts = [
-#        "../../scripts/install_docker_ec2.sh",
+        "../../scripts/install_docker_ec2.sh",
         "../../scripts/run_app_ec2.sh"
         ]
     }

@@ -13,3 +13,10 @@ variable "project_name" {
   default     = "Kittens Store"
   description = "Project name"
 }
+
+variable "assigned_security_groups" {
+  type = list(string)
+
+  description = "Assigned Security group"
+  default = []
+}
