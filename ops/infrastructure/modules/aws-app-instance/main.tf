@@ -1,13 +1,13 @@
-resource "aws_instance" "INSTANCE_NEW" {
-  ami           = data.aws_ami.AWS_AMI_RES.id
+resource "aws_instance" "main_instance" {
+  ami           = data.aws_ami.aws_ami_res.id
   instance_type = "t2.micro"
   associate_public_ip_address = true
 
-  key_name = aws_key_pair.AWS_KEY.key_name
+  key_name = aws_key_pair.aws_key.key_name
   subnet_id = var.subnet_id
   vpc_security_group_ids = concat([var.security_group_ids], var.assigned_security_groups)
 
-  user_data = base64encode(data.template_file.USER_DATA.rendered)
+  user_data = base64encode(data.template_file.user_data.rendered)
 
   tags = {
     type = var.project_name
@@ -33,7 +33,7 @@ resource "aws_instance" "INSTANCE_NEW" {
   }
 }
 
-data "aws_ami" "AWS_AMI_RES" {
+data "aws_ami" "aws_ami_res" {
   most_recent      = true
   owners           = ["amazon"]
 
@@ -48,11 +48,11 @@ data "aws_ami" "AWS_AMI_RES" {
   }
 }
 
-resource "aws_key_pair" "AWS_KEY" {
+resource "aws_key_pair" "aws_key" {
   key_name = "public-aws-key"
   public_key = file("~/.ssh/id_rsa.pub")
 }
 
-data "template_file" "USER_DATA" {
+data "template_file" "user_data" {
   template = file("../../templates/app_user_data.sh.tpl")
 }

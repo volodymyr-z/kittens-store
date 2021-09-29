@@ -11,6 +11,10 @@ provider "aws" {
   region = var.location
 }
 
+locals {
+  availability_zones = sort(var.availability_zones)
+}
+
 resource "aws_vpc" "VPC" {
   cidr_block = var.cidr_block
   tags = {
@@ -18,20 +22,20 @@ resource "aws_vpc" "VPC" {
   }
 }
 
-resource "aws_internet_gateway" "GW" {
+resource "aws_internet_gateway" "internet_gateway" {
   vpc_id = aws_vpc.VPC.id
 
   tags = {
-    Name = "AWS GW"
+    Name = "Internet Gateway"
   }
 }
 
-resource "aws_route_table" "ROUTING_TABLE" {
+resource "aws_route_table" "routing_table" {
   vpc_id = aws_vpc.VPC.id
 
   route {
     cidr_block = var.routing_table_cidr
-    gateway_id = aws_internet_gateway.GW.id
+    gateway_id = aws_internet_gateway.internet_gateway.id
   }
 
   tags = {
@@ -39,25 +43,21 @@ resource "aws_route_table" "ROUTING_TABLE" {
   }
 }
 
-resource "aws_subnet" "SUBNET" {
-  count = 2
+resource "aws_subnet" "subnet" {
+  for_each = toset(local.availability_zones)
 
-  availability_zone = element(data.aws_availability_zones.zones.names, count.index)
+  availability_zone = each.key
   vpc_id            = aws_vpc.VPC.id
-  cidr_block        = cidrsubnet(var.cidr_block, 8, count.index + 1)
+  cidr_block        = cidrsubnet(var.cidr_block, 8, index(local.availability_zones, each.key) + 1)
 
   tags = {
-    Name = "Subnet-public-${count.index + 1}"
+    Name = "Subnet-public-${index(local.availability_zones, each.key)}"
   }
 }
 
-data "aws_availability_zones" "zones" {
-  state = "available"
-}
+resource "aws_route_table_association" "route_table" {
+  for_each = aws_subnet.subnet
 
-resource "aws_route_table_association" "ROUTE_TABLE" {
-  count = 2
-
-  subnet_id      = element(aws_subnet.SUBNET[*].id, count.index)
-  route_table_id = aws_route_table.ROUTING_TABLE.id
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.routing_table.id
 }

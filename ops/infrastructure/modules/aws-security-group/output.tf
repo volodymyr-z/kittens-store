@@ -1,5 +1,5 @@
 output "security_group_ids" {
-  value = aws_security_group.SECURITY_GROUP_PORTS.id
+  value = aws_security_group.security_group_for_vpc.id
 }
 
 output "your_ip" {
@@ -7,5 +7,5 @@ output "your_ip" {
 }
 
 output "security_group" {
-  value = aws_security_group.SECURITY_GROUP_PORTS
+  value = aws_security_group.security_group_for_vpc
 }

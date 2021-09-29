@@ -3,7 +3,7 @@ output "vpc_id" {
 }
 
 output "subnet_ids" {
-  value = aws_subnet.SUBNET.*.id
+  value = [for subnets in aws_subnet.subnet : subnets.id]
 }
 
 output "location" {
@@ -11,5 +11,5 @@ output "location" {
 }
 
 output "availability_zones" {
-  value = aws_subnet.SUBNET[*].availability_zone
+  value = [for subnets in aws_subnet.subnet : subnets.availability_zone]
 }

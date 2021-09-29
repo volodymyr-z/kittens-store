@@ -10,12 +10,6 @@ variable "cidr_block" {
   description = "Default cidr block"
 }
 
-variable "subnets_number" {
-  type        = string
-  default     = 2
-  description = "Number of subnets to create"
-}
-
 variable "routing_table_cidr" {
   type = string
   default = "0.0.0.0/0"
@@ -26,4 +20,9 @@ variable "project_name" {
   type        = string
   default     = "Kittens Store VPC"
   description = "VPC name"
+}
+
+variable "availability_zones" {
+  type = list(string)
+  description = "Zone availability"
 }

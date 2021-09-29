@@ -1,4 +1,4 @@
-resource "aws_security_group" "SECURITY_GROUP_PORTS" {
+resource "aws_security_group" "security_group_for_vpc" {
   name_prefix = "allow_tls"
   description = "Allow TLS inbound traffic"
   vpc_id      = var.vpc_id

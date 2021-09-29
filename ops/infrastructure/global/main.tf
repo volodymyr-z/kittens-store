@@ -10,6 +10,10 @@ terraform {
   }
 }
 
+data "aws_availability_zones" "zones" {
+  state = "available"
+}
+
 resource "aws_security_group" "security_office_1" {
   name_prefix = "office"
   description = "Connect RDS and Instance"
@@ -32,7 +36,7 @@ module "vpc" {
   source = "../modules/aws-vpc"
 
   cidr_block = "10.0.0.0/16"
-  subnets_number = 2
+  availability_zones = data.aws_availability_zones.zones.names
 }
 
 module "security" {
