@@ -20,3 +20,9 @@ variable "assigned_security_groups" {
   description = "Assigned Security group"
   default = []
 }
+
+variable "instance_count" {
+  type        = string
+  default = 2
+  description = "How many instances to create"
+}

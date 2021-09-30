@@ -1,4 +1,6 @@
 resource "aws_instance" "main_instance" {
+  count = var.instance_count
+
   ami           = data.aws_ami.aws_ami_res.id
   instance_type = "t2.micro"
   associate_public_ip_address = true
@@ -10,7 +12,7 @@ resource "aws_instance" "main_instance" {
   user_data = base64encode(data.template_file.user_data.rendered)
 
   tags = {
-    type = var.project_name
+    type = "${var.project_name}-${var.instance_count + 1}"
   }
 
   provisioner "file" {

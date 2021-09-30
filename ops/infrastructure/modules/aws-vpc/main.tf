@@ -15,7 +15,7 @@ locals {
   availability_zones = sort(var.availability_zones)
 }
 
-resource "aws_vpc" "VPC" {
+resource "aws_vpc" "default_vpc" {
   cidr_block = var.cidr_block
   tags = {
     Name = var.project_name
@@ -23,7 +23,7 @@ resource "aws_vpc" "VPC" {
 }
 
 resource "aws_internet_gateway" "internet_gateway" {
-  vpc_id = aws_vpc.VPC.id
+  vpc_id = aws_vpc.default_vpc.id
 
   tags = {
     Name = "Internet Gateway"
@@ -31,7 +31,7 @@ resource "aws_internet_gateway" "internet_gateway" {
 }
 
 resource "aws_route_table" "routing_table" {
-  vpc_id = aws_vpc.VPC.id
+  vpc_id = aws_vpc.default_vpc.id
 
   route {
     cidr_block = var.routing_table_cidr
@@ -47,7 +47,7 @@ resource "aws_subnet" "subnet" {
   for_each = toset(local.availability_zones)
 
   availability_zone = each.key
-  vpc_id            = aws_vpc.VPC.id
+  vpc_id            = aws_vpc.default_vpc.id
   cidr_block        = cidrsubnet(var.cidr_block, 8, index(local.availability_zones, each.key) + 1)
 
   tags = {

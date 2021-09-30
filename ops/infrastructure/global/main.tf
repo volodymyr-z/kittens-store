@@ -58,4 +58,12 @@ module "app_instance" {
   subnet_id = module.vpc.subnet_ids[0]
   security_group_ids = module.security.security_group_ids
   assigned_security_groups = [aws_security_group.security_office_1.id]
+  instance_count = 2
+}
+
+module "load_balancer" {
+  source = "../modules/aws-load-balancer"
+  vpc = module.vpc
+  instance_ids = module.app_instance.instance_ids
+  security_group_ids = [module.security.security_group_ids]
 }

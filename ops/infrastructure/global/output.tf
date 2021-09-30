@@ -10,3 +10,11 @@ output "database_url" {
 output "database_host" {
   value = module.rds.host
 }
+
+output "public_endpoint" {
+  value = module.load_balancer.public_endpoint
+}
+
+output "public_ips" {
+  value = module.app_instance.public_ip
+}
